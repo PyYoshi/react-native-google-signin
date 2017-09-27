@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
+import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
 
 class GoogleSigninSampleApp extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class GoogleSigninSampleApp extends Component {
     if (!this.state.user) {
       return (
         <View style={styles.container}>
-          <GoogleSigninButton style={{width: 212, height: 48}} size={GoogleSigninButton.Size.Standard} color={GoogleSigninButton.Color.Auto} onPress={this._signIn.bind(this)}/>
+          <GoogleSigninButton style={{ width: 212, height: 48 }} size={GoogleSigninButton.Size.Standard} color={GoogleSigninButton.Color.Auto} onPress={this._signIn.bind(this)} />
         </View>
       );
     }
@@ -33,11 +33,11 @@ class GoogleSigninSampleApp extends Component {
     if (this.state.user) {
       return (
         <View style={styles.container}>
-          <Text style={{fontSize: 18, fontWeight: 'bold', marginBottom: 20}}>Welcome {this.state.user.name}</Text>
+          <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 20 }}>Welcome {this.state.user.name}</Text>
           <Text>Your email is: {this.state.user.email}</Text>
 
-          <TouchableOpacity onPress={() => {this._signOut(); }}>
-            <View style={{marginTop: 50}}>
+          <TouchableOpacity onPress={() => { this._signOut(); }}>
+            <View style={{ marginTop: 50 }}>
               <Text>Log out</Text>
             </View>
           </TouchableOpacity>
@@ -57,30 +57,30 @@ class GoogleSigninSampleApp extends Component {
 
       const user = await GoogleSignin.currentUserAsync();
       console.log(user);
-      this.setState({user});
+      this.setState({ user });
     }
-    catch(err) {
+    catch (err) {
       console.log("Google signin error", err.code, err.message);
     }
   }
 
   _signIn() {
     GoogleSignin.signIn()
-    .then((user) => {
-      console.log(user);
-      this.setState({user: user});
-    })
-    .catch((err) => {
-      console.log('WRONG SIGNIN', err);
-    })
-    .done();
+      .then((user) => {
+        console.log(user);
+        this.setState({ user: user });
+      })
+      .catch((err) => {
+        console.log('WRONG SIGNIN', err);
+      })
+      .done();
   }
 
   _signOut() {
     GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut()).then(() => {
-      this.setState({user: null});
+      this.setState({ user: null });
     })
-    .done();
+      .done();
   }
 }
 

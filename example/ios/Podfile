@@ -1,0 +1,12 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '9.0'
+
+target 'GoogleSigninSampleApp' do
+  # Google
+  pod 'GoogleSignIn'
+end
+
+target 'GoogleSigninSampleApp-tvOS' do
+  # Google
+  pod 'GoogleSignIn'
+end
