@@ -10,7 +10,7 @@
 		"prop-types": "^15.6.0",
 		"react": "16.0.0-alpha.12",
 		"react-native": "0.48.4",
-		"react-native-google-signin": "git://github.com/PyYoshi/react-native-google-signin.git#improve_errors"
+		"react-native-google-signin": "file:../"
 	},
 	"devDependencies": {
 		"babel-jest": "21.2.0",

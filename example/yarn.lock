@@ -3434,9 +3434,8 @@ react-devtools-core@^2.5.0:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-"react-native-google-signin@git://github.com/PyYoshi/react-native-google-signin.git#improve_errors":
+"react-native-google-signin@file:..":
   version "0.11.0"
-  resolved "git://github.com/PyYoshi/react-native-google-signin.git#a9754f6a2daa13c3b5352a4b88c7d619a2fb8a26"
 
 react-native@0.48.4:
   version "0.48.4"
