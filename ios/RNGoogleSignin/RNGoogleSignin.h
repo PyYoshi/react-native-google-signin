@@ -3,10 +3,17 @@
 
 #import <React/RCTBridgeModule.h>
 #import <React/RCTConvert.h>
+#import <React/RCTEventEmitter.h>
 
 #import <GoogleSignIn/GoogleSignIn.h>
 
-@interface RNGoogleSignin : NSObject<RCTBridgeModule, GIDSignInDelegate, GIDSignInUIDelegate>
+static NSString *const EVENT_GOOGLE_SIGNIN_ERROR = @"RNGoogleSignInError";
+static NSString *const EVENT_GOOGLE_SIGNIN_SUCCESS = @"RNGoogleSignInSuccess";
+static NSString *const EVENT_GOOGLE_SIGNIN_WILL_DISPATCH = @"RNGoogleSignInWillDispatch";
+static NSString *const EVENT_GOOGLE_SIGNIN_REVOKE_ERROR = @"RNGoogleRevokeError";
+static NSString *const EVENT_GOOGLE_SIGNIN_REVOKE_SUCCESS = @"RNGoogleRevokeSuccess";
+
+@interface RNGoogleSignin : RCTEventEmitter <RCTBridgeModule, GIDSignInDelegate, GIDSignInUIDelegate>
 
 + (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation;

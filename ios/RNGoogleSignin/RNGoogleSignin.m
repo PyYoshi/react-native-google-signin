@@ -1,6 +1,4 @@
 #import "RNGoogleSignIn.h"
-#import <React/RCTEventDispatcher.h>
-
 
 @implementation RNGoogleSignin
 
@@ -70,7 +68,7 @@ RCT_EXPORT_METHOD(revokeAccess)
             isCancelled = YES;
         }
 
-        return [self.bridge.eventDispatcher sendAppEventWithName:@"RNGoogleSignInError"
+        return [self sendEventWithName:EVENT_GOOGLE_SIGNIN_ERROR
                                                             body:@{
                                                                    @"message": error.description,
                                                                    @"code": [NSNumber numberWithInteger: error.code],
@@ -98,24 +96,24 @@ RCT_EXPORT_METHOD(revokeAccess)
                            @"accessTokenExpirationDate": [NSNumber numberWithDouble:user.authentication.accessTokenExpirationDate.timeIntervalSinceNow]
                            };
 
-    return [self.bridge.eventDispatcher sendAppEventWithName:@"RNGoogleSignInSuccess" body:body];
+    return [self sendEventWithName:EVENT_GOOGLE_SIGNIN_SUCCESS body:body];
 }
 
 - (void) signInWillDispatch:(GIDSignIn *)signIn error:(NSError *)error {
-    return [self.bridge.eventDispatcher sendAppEventWithName:@"RNGoogleSignInWillDispatch"
+    return [self sendEventWithName:EVENT_GOOGLE_SIGNIN_WILL_DISPATCH
                                                         body:@{}];
 }
 
 - (void)signIn:(GIDSignIn *)signIn didDisconnectWithUser:(GIDGoogleUser *)user withError:(NSError *)error {
   if (error != Nil) {
-    return [self.bridge.eventDispatcher sendAppEventWithName:@"RNGoogleRevokeError"
+    return [self sendEventWithName:EVENT_GOOGLE_SIGNIN_REVOKE_ERROR
                                                         body:@{
                                                                @"message": error.description,
                                                                @"code": [NSNumber numberWithInteger: error.code]
                                                                }];
   }
 
-  return [self.bridge.eventDispatcher sendAppEventWithName:@"RNGoogleRevokeSuccess" body:@{}];
+  return [self sendEventWithName:EVENT_GOOGLE_SIGNIN_REVOKE_SUCCESS body:@{}];
 }
 
 - (void) signIn:(GIDSignIn *)signIn presentViewController:(UIViewController *)viewController {
@@ -133,6 +131,10 @@ RCT_EXPORT_METHOD(revokeAccess)
     return [[GIDSignIn sharedInstance] handleURL:url
                                sourceApplication:sourceApplication
                                       annotation:annotation];
+}
+
+- (NSArray<NSString *> *)supportedEvents {
+    return @[EVENT_GOOGLE_SIGNIN_ERROR, EVENT_GOOGLE_SIGNIN_SUCCESS, EVENT_GOOGLE_SIGNIN_WILL_DISPATCH, EVENT_GOOGLE_SIGNIN_REVOKE_ERROR, EVENT_GOOGLE_SIGNIN_REVOKE_SUCCESS];
 }
 
 #pragma mark - Internal Methods

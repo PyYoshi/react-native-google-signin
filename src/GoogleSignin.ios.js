@@ -3,13 +3,15 @@ import PropTypes from 'prop-types';
 
 import {
   View,
-  NativeAppEventEmitter,
+  NativeEventEmitter,
   NativeModules,
   requireNativeComponent,
   ViewPropTypes,
 } from 'react-native';
 
 const { RNGoogleSignin } = NativeModules;
+
+const GoogleSigninEmitter = new NativeEventEmitter(RNGoogleSignin);
 
 const RNGoogleSigninButton = requireNativeComponent('RNGoogleSigninButton', null);
 
@@ -23,7 +25,7 @@ class GoogleSigninButton extends Component {
   };
 
   componentDidMount() {
-    this._clickListener = NativeAppEventEmitter.addListener('RNGoogleSignInWillDispatch', () => {
+    this._clickListener = GoogleSigninEmitter.addListener('RNGoogleSignInWillDispatch', () => {
       GoogleSigninSingleton.signinIsInProcess = true;
       this.props.onPress && this.props.onPress();
     });
@@ -84,13 +86,13 @@ class GoogleSignin {
 
   currentUserAsync() {
     return new Promise((resolve, reject) => {
-      const sucessCb = NativeAppEventEmitter.addListener('RNGoogleSignInSuccess', (user) => {
+      const sucessCb = GoogleSigninEmitter.addListener('RNGoogleSignInSuccess', (user) => {
         this._user = user;
         this._removeListeners(sucessCb, errorCb);
         resolve(user);
       });
 
-      const errorCb = NativeAppEventEmitter.addListener('RNGoogleSignInError', () => {
+      const errorCb = GoogleSigninEmitter.addListener('RNGoogleSignInError', () => {
         this._removeListeners(sucessCb, errorCb);
         resolve(null);
       });
@@ -105,14 +107,14 @@ class GoogleSignin {
 
   signIn() {
     return new Promise((resolve, reject) => {
-      const sucessCb = NativeAppEventEmitter.addListener('RNGoogleSignInSuccess', (user) => {
+      const sucessCb = GoogleSigninEmitter.addListener('RNGoogleSignInSuccess', (user) => {
         this._user = user;
         this.signinIsInProcess = false;
         this._removeListeners(sucessCb, errorCb);
         resolve(user);
       });
 
-      const errorCb = NativeAppEventEmitter.addListener('RNGoogleSignInError', (err) => {
+      const errorCb = GoogleSigninEmitter.addListener('RNGoogleSignInError', (err) => {
         this._removeListeners(sucessCb, errorCb);
         this.signinIsInProcess = false;
         if (err.isCancelled) {
@@ -135,12 +137,12 @@ class GoogleSignin {
 
   revokeAccess() {
     return new Promise((resolve, reject) => {
-      const sucessCb = NativeAppEventEmitter.addListener('RNGoogleRevokeSuccess', () => {
+      const sucessCb = GoogleSigninEmitter.addListener('RNGoogleRevokeSuccess', () => {
         this._removeListeners(sucessCb, errorCb);
         resolve();
       });
 
-      const errorCb = NativeAppEventEmitter.addListener('RNGoogleRevokeError', (err) => {
+      const errorCb = GoogleSigninEmitter.addListener('RNGoogleRevokeError', (err) => {
         this._removeListeners(sucessCb, errorCb);
         reject(new GoogleSigninError(err.message, err.code));
       });
