@@ -3434,8 +3434,9 @@ react-devtools-core@^2.5.0:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-"react-native-google-signin@file:..":
-  version "0.11.0"
+"react-native-google-signin@link:..":
+  version "0.0.0"
+  uid ""
 
 react-native@0.48.4:
   version "0.48.4"
