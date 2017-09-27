@@ -337,6 +337,12 @@ public class RNGoogleSigninModule extends ReactContextBaseJavaModule {
             params.putInt("code", code);
             params.putString("error", error);
 
+            boolean isCancelled = false;            
+            if (code == GoogleSignInStatusCodes.SIGN_IN_CANCELLED) {
+                isCancelled = true;
+            }
+            params.putBoolean("isCancelled", isCancelled);
+
             getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                     .emit(isSilent ? "RNGoogleSignInSilentError" : "RNGoogleSignInError", params);
         }

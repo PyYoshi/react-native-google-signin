@@ -13,6 +13,8 @@ const { RNGoogleSignin } = NativeModules;
 
 const RNGoogleSigninButton = requireNativeComponent('RNGoogleSigninButton', null);
 
+import { GoogleSigninError, GoogleSigninErrorCancelled } from './errors';
+
 class GoogleSigninButton extends Component {
   static propTypes = {
     ...ViewPropTypes,
@@ -50,14 +52,6 @@ GoogleSigninButton.Color = {
   Light: RNGoogleSignin.BUTTON_COLOR_LIGHT,
   Dark: RNGoogleSignin.BUTTON_COLOR_DARK
 };
-
-class GoogleSigninError extends Error {
-  constructor(error, code) {
-    super(error);
-    this.name = 'GoogleSigninError';
-    this.code  = code;
-  }
-}
 
 class GoogleSignin {
 
@@ -128,7 +122,11 @@ class GoogleSignin {
 
       const errorCb = DeviceEventEmitter.addListener('RNGoogleSignInError', (err) => {
         this._removeListeners(sucessCb, errorCb);
-        reject(new GoogleSigninError(err.error, err.code));
+        if (err.isCancelled) {
+          reject(new GoogleSigninErrorCancelled(err.error, err.code));
+        } else {
+          reject(new GoogleSigninError(err.error, err.code));
+        }
       });
 
       RNGoogleSignin.signIn();

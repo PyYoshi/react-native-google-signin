@@ -65,10 +65,16 @@ RCT_EXPORT_METHOD(revokeAccess)
 - (void)signIn:(GIDSignIn *)signIn didSignInForUser:(GIDGoogleUser *)user withError:(NSError *)error {
 
     if (error != Nil) {
+        BOOL isCancelled = NO;
+        if (error.code == kGIDSignInErrorCodeCanceled) {
+            isCancelled = YES;
+        }
+
         return [self.bridge.eventDispatcher sendAppEventWithName:@"RNGoogleSignInError"
                                                             body:@{
                                                                    @"message": error.description,
-                                                                   @"code": [NSNumber numberWithInteger: error.code]
+                                                                   @"code": [NSNumber numberWithInteger: error.code],
+                                                                   @"isCancelled": [NSNumber numberWithBool: isCancelled]
                                                                   }];
     }
 

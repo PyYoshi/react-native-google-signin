@@ -13,6 +13,8 @@ const { RNGoogleSignin } = NativeModules;
 
 const RNGoogleSigninButton = requireNativeComponent('RNGoogleSigninButton', null);
 
+import { GoogleSigninError, GoogleSigninErrorCancelled } from './errors';
+
 class GoogleSigninButton extends Component {
   static propTypes = {
     ...ViewPropTypes,
@@ -113,7 +115,11 @@ class GoogleSignin {
       const errorCb = NativeAppEventEmitter.addListener('RNGoogleSignInError', (err) => {
         this._removeListeners(sucessCb, errorCb);
         this.signinIsInProcess = false;
-        reject(err);
+        if (err.isCancelled) {
+          reject(new GoogleSigninErrorCancelled(err.message, err.code));
+        } else {
+          reject(new GoogleSigninError(err.message, err.code));
+        }
       });
 
       !this.signinIsInProcess && RNGoogleSignin.signIn();
@@ -136,7 +142,7 @@ class GoogleSignin {
 
       const errorCb = NativeAppEventEmitter.addListener('RNGoogleRevokeError', (err) => {
         this._removeListeners(sucessCb, errorCb);
-        reject(err);
+        reject(new GoogleSigninError(err.message, err.code));
       });
 
       RNGoogleSignin.revokeAccess();
